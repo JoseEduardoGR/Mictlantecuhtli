@@ -69,6 +69,9 @@ section { padding-block: 52px; border-top: 1px solid var(--line); }
 .brand b { font: 800 20px/1 var(--display); letter-spacing: .03em; }
 .top nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
 .top nav a { white-space: nowrap; text-decoration: none; color: var(--ink-2); font-size: 14px; padding: 8px 10px; border-radius: 4px; }
+.top nav a.gh { border: 1px solid var(--ink-3); color: var(--ink); margin-left: 6px; }
+.btn { display: inline-block; text-decoration: none; background: var(--ink); color: var(--bg); font: 500 14px var(--mono); letter-spacing: .02em; padding: 11px 16px; border-radius: 4px; }
+.btn:hover { background: var(--accent); color: #fff; }
 .top nav a:hover { color: var(--ink); background: var(--surface-2); }
 
 /* portada */
@@ -115,6 +118,7 @@ svg { display: block; width: 100%; height: auto; max-width: 100%; }
 .nums dt { font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
 .nums dd { margin: 2px 0 0; font: 700 24px/1.1 var(--display); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
 .nums dd small { font: 400 13px var(--mono); color: var(--ink-3); letter-spacing: 0; }
+.whitefig img { width: 100%; height: auto; background: #fff; }
 .warn { border-left: 3px solid var(--accent); padding: 6px 0 6px 12px; font-size: 14px; color: var(--ink-2); margin-top: 12px; }
 
 /* esquemas */
@@ -242,6 +246,7 @@ ul.cmp li { margin-bottom: .3em; break-inside: avoid; }
   <nav aria-label="Secciones">
     <a href="#proyecto">Proyecto</a><a href="#objetivos">Objetivos</a><a href="#marco">Marco teórico</a><a href="#arte">Estado del arte</a>
     <a href="#propulsion">Propulsión</a><a href="#resultados">Resultados</a><a href="#equipo">Equipo</a><a href="#referencias">Referencias</a>
+    <a class="gh" href="https://github.com/JoseEduardoGR/Mictlantecuhtli" target="_blank" rel="noopener">Código en GitHub ↗</a>
   </nav>
 </div></div>
 
@@ -258,6 +263,7 @@ ul.cmp li { margin-bottom: .3em; break-inside: avoid; }
       <div><dt>Propuestas de propulsión</dt><dd>4</dd></div>
     </dl>
     <p class="upd">Última actualización: 14 de octubre de 2026</p>
+    <p style="margin:18px 0 0"><a class="btn" href="https://github.com/JoseEduardoGR/Mictlantecuhtli" target="_blank" rel="noopener">Ver el código en GitHub ↗</a></p>
   </div>
   <figure class="logoplate"><img alt="Emblema del equipo Mictlantecuhtli: casco robótico con calavera y penacho de cristales azules" src="data:image/png;base64,__LOGO__"></figure>
 </div>
@@ -537,7 +543,7 @@ ul.cmp li { margin-bottom: .3em; break-inside: avoid; }
           <li>Es la que menos energía necesita y empuja desde la punta, donde hay más palanca.</li>
           <li>La misma viga abre y cierra la compuerta.</li>
         </ul>
-        <div class="warn">Empujar en horizontal pierde fuerza al acercarse a 0°, y por eso apenas llega al tope de 14° con la carga de ejemplo. El empuje es de 5 a 7 kgf al inicio. La ranura se modeló recta, no en curva.</div>
+        <div class="warn">Empujar en horizontal pierde fuerza al acercarse a 0°, así que el final del recorrido ocurre por inercia. El empuje es de 5 a 7 kgf al inicio. La ranura se modeló recta, no en curva.</div>
       </div>
     </div>
   </article>
@@ -576,6 +582,20 @@ ul.cmp li { margin-bottom: .3em; break-inside: avoid; }
       <tr class="m4"><td><span class="sw"></span>Equipo · Rueda con ranura</td><td class="n">__P4_E__ J</td><td class="n">__P4_T__ ms</td><td class="n">__P4_V__ m/s</td><td class="n">__P4_W__ rad/s</td><td class="n">__P4_C__ s</td><td>5 a 7 kgf al inicio del empuje</td><td>La de menor energía; poca palanca arriba</td></tr>
     </tbody>
   </table></div>
+  <h3 style="margin:38px 0 4px">Sensibilidad a los parámetros</h3>
+  <p style="font-size:15px;color:var(--ink-2)">Se repitió la simulación variando un solo parámetro cada vez. Las figuras son siempre de fondo blanco.</p>
+  <figure class="fig whitefig" style="margin-top:14px">
+    <img alt="Ángulo máximo alcanzado contra la masa extra en la punta, para las propuestas 1, 2 y del equipo" src="data:image/png;base64,__IMG_CARGA__">
+    <figcaption>Qué carga levanta cada propuesta. La propuesta 1 deja de abrir por encima de unos 0.4 kg. La 2 y la del equipo siguieron llegando al techo hasta 0.8 kg; la figura muestra el ángulo, no la velocidad.</figcaption>
+  </figure>
+  <figure class="fig whitefig" style="margin-top:14px">
+    <img alt="Ángulo máximo y tiempo hasta 14 grados al variar la rigidez del elástico o la velocidad del volante" src="data:image/png;base64,__IMG_PARAM__">
+    <figcaption>Arriba, el ángulo máximo; abajo, el tiempo hasta 14° (solo si llega). La propuesta 1 necesita un elástico de al menos unos 3000 N/m con estos valores. En las otras dos, subir la rigidez o la velocidad del volante solo acelera la apertura.</figcaption>
+  </figure>
+  <figure class="fig whitefig" style="margin-top:14px">
+    <img alt="Fuerza en la punta de la palanca y energía del elástico contra el ángulo de la palanca, propuesta 1" src="data:image/png;base64,__IMG_FUERZA__">
+    <figcaption>Propuesta 1: el empuje en la punta baja de 7.5 kgf (armada) a 1.7 kgf a 50°. Entre -10° y 30° el elástico entrega unos 10 de sus 17 J.</figcaption>
+  </figure>
   <details>
     <summary>Ver los datos de las gráficas como tabla</summary>
     <div class="tbl"><table id="datatable"></table></div>
@@ -619,6 +639,7 @@ python compuerta.py --propuesta 2   # volante de inercia
 python compuerta.py --propuesta 3   # elástico + leva
 python propuesta_negra.py           # rueda con ranura
 # agrega --auto para correr sin ventana</pre>
+      <p style="font-size:15px;margin:0 0 10px"><a href="https://github.com/JoseEduardoGR/Mictlantecuhtli" target="_blank" rel="noopener">Código fuente completo en GitHub ↗</a> (simulaciones, parámetros, generador de esta página y README con detalles técnicos).</p>
       <p style="font-size:14px;color:var(--ink-3)">Controles: ESPACIO dispara, A rearma, R reinicia, P pausa y las flechas arriba/abajo cambian la rigidez (o la velocidad del volante).</p>
     </div>
   </div>
@@ -641,7 +662,7 @@ python propuesta_negra.py           # rueda con ranura
     <div>
       <h3 style="margin-bottom:14px">Pendientes y preguntas abiertas</h3>
       <ul class="todo">
-        <li><b>Definir los 6 kg</b><span>¿Es la fuerza de empuje de la palanca o la carga en la punta de la compuerta? Cambia mucho el diseño: con la carga actual solo se levantan unos 0.4 kg en la punta.</span></li>
+        <li><b>Definir los 6 kg</b><span>¿Es la fuerza de empuje de la palanca o la carga en la punta de la compuerta? Cambia mucho el diseño: con la carga de ejemplo la propuesta 1 levanta hasta unos 0.4 kg en la punta, y la 2 y la del equipo siguieron abriendo hasta 0.8 kg.</span></li>
         <li><b>Medidas y masas reales</b><span>Peso de la compuerta, de lo que debe levantar y dimensiones finales del chasis.</span></li>
         <li><b>Elegir propuesta</b><span>Comparar costo, facilidad de fabricación y seguridad entre las cuatro.</span></li>
         <li><b>Verificar la leva</b><span>Revisar si el caracol cabe físicamente junto a la palanca.</span></li>
@@ -714,7 +735,7 @@ python propuesta_negra.py           # rueda con ranura
 </main>
 
 <footer><div class="wrap">
-  <p><b>Mictlantecuhtli</b> · Proyecto integrador, grupo 931-M · TESCI.</p>
+  <p><b>Mictlantecuhtli</b> · Proyecto integrador, grupo 931-M · TESCI. · <a href="https://github.com/JoseEduardoGR/Mictlantecuhtli" target="_blank" rel="noopener">Código en GitHub ↗</a></p>
   <p>Página de muestra para publicar y mejorar la investigación. Las cifras de la propulsión son resultados de simulación con valores de ejemplo, y se irán reemplazando por medidas reales.</p>
 </div></footer>
 

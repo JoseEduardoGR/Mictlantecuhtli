@@ -168,11 +168,24 @@ def persona(n, roles, areas):
 html = html.replace("__PEOPLE__", "".join(persona(n, r, a) for n, r, a in PEOPLE))
 
 html = html.replace("__LOGO_S__", open(SP + "logo_small_b64.txt").read())
+import base64
+for marca, nombre in (("__IMG_CARGA__", "barrido_carga.png"), ("__IMG_PARAM__", "barrido_parametros.png"), ("__IMG_FUERZA__", "fuerza_palanca_p1.png")):
+    ruta = os.path.join(os.path.dirname(SP.rstrip("/")), "docs", "img", nombre)
+    html = html.replace(marca, base64.b64encode(open(ruta, "rb").read()).decode())
 html = html.replace("__ICON__", open(SP + "icon_b64.txt").read())
 html = html.replace("__LOGO__", logo)
 data = {k: {kk: D[k][kk] for kk in ("t", "ang", "vp")} for k in D}
 html = html.replace("__DATA__", json.dumps(data, separators=(",", ":")))
 left = [s for s in html.split("__") if s and s[:1].isupper() and s.isupper() and len(s) < 14]
 print("placeholders sobrantes:", [m for m in __import__("re").findall(r"__[A-Z0-9_]+__", html)])
-open(SP + "pagina.html", "w").write(html)
-print(len(html))
+# Documento completo y autocontenido para publicarlo (GitHub Pages sirve la carpeta docs/)
+corte = html.index('<div class="top">')
+cabeza, cuerpo = html[:corte].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', ''), html[corte:]
+doc = ('<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n'
+       '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+       + cabeza + '</head>\n<body>\n' + cuerpo + '\n</body>\n</html>\n')
+destino = os.path.join(os.path.dirname(SP.rstrip("/")), "docs", "index.html")
+os.makedirs(os.path.dirname(destino), exist_ok=True)
+open(destino, "w", encoding="utf-8").write(doc)
+open(os.path.join(os.path.dirname(destino), ".nojekyll"), "w").close()
+print("escrito", destino, len(doc))

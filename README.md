@@ -27,6 +27,8 @@ Simulación física 2D (Pymunk + Pygame) de cuatro mecanismos para levantar de g
 17. [Página web](#17-página-web)
 18. [Pendientes](#18-pendientes)
 
+Las figuras están en `docs/img/` y se regeneran con `web/figuras.py`.
+
 ---
 
 ## 1. Resumen
@@ -44,6 +46,10 @@ Se simularon cuatro soluciones, con la misma compuerta y el mismo espacio:
 | 3 | Palanca con leva de caracol | Elástico | `compuerta.py` | `--propuesta 3` |
 | 4 | Rueda con ranura (ariete), viga atada a la compuerta | Elástico enrollado | `propuesta_negra.py` | — |
 
+![Concepto: reposo y disparo](docs/img/esquema_concepto.png)
+
+*Concepto: con la compuerta cerrada el rival queda al frente; al dispararse la compuerta gira hacia arriba y lo levanta por debajo.*
+
 ## 2. Estructura del repositorio
 
 ```
@@ -53,10 +59,14 @@ Se simularon cuatro soluciones, con la misma compuerta y el mismo espacio:
 ├── params.py               # todos los parámetros: diccionario P (propuestas 1-3) y PN (propuesta del equipo)
 ├── requirements.txt        # dependencias
 ├── salidas/                # resultados: CSV, gráficas y capturas (se sobrescriben en cada corrida)
+├── docs/                   # sitio web publicable (GitHub Pages sirve esta carpeta)
+│   ├── index.html          # la página del proyecto (un solo archivo, autocontenido)
+│   └── img/                # figuras de esta documentación (esquemas, comparativas, barridos)
 ├── iconos/                 # icono simplificado del emblema (SVG y PNG 16 a 512 px)
-├── web/                    # generador de la página web del proyecto
+├── web/                    # generador de la página web (escribe docs/index.html)
 │   ├── extract.py          # corre las 4 simulaciones, extrae series, métricas y esquemas SVG
-│   ├── build.py            # arma pagina.html a partir de template.html y los datos
+│   ├── build.py            # arma docs/index.html a partir de template.html y los datos
+│   ├── figuras.py          # genera docs/img/: gráficas comparativas, barridos, esquemas
 │   ├── template.html       # plantilla (HTML, CSS y JS de las gráficas)
 │   └── *.txt               # logo e icono en base64
 ├── Mictlantecuhtli.png     # emblema del equipo (fondo transparente)
@@ -127,6 +137,10 @@ x_min = (17  − 330) · s = −0.492 m          y_min = −(300 − 175) · s =
 x_max = (363 − 330) · s = +0.052 m          y_max = −(224 − 175) · s = −0.077 m
 techo_y = (175 − 135) · s = +0.063 m        (franja prohibida arriba)
 ```
+
+![Zona permitida](docs/img/esquema_zona.png)
+
+*Zona permitida (morado) y zonas donde no puede haber piezas (rayado rojo). Origen en la bisagra.*
 
 Consecuencias que condicionan todo el diseño:
 
@@ -299,6 +313,10 @@ El ciclo termina cuando se vuelve a `LISTO` tras haber disparado. Se sigue graba
 
 **Cómo funciona:** el motor jala la cuerda y gira la palanca hacia abajo (armado), con el elástico estirado `extension_armado`. La cuerda tensa sostiene la palanca. Al soltarla, el elástico tira del brazo de arriba hacia la izquierda y la punta sube y golpea la compuerta. A los 0.7 s el motor vuelve a jalar la cuerda; la palanca baja y la compuerta se cierra.
 
+| Armado | Apertura máxima |
+|---|---|
+| ![P1 armado](docs/img/esquema_p1_armado.png) | ![P1 apertura máxima](docs/img/esquema_p1_abierta.png) |
+
 **Ecuaciones (con los valores de ejemplo):**
 
 ```
@@ -318,6 +336,12 @@ piv.x = x_max − margen_derecho − (L_palanca + r_punta) · cos(angulo_armado)
 
 La palanca armada está a -10° para que la punta quede dentro de la zona. Al disparar sube hasta unos 25–30° hasta que la compuerta, ya en el techo, la detiene.
 
+**Empuje y energía contra el ángulo de la palanca** (cálculo con la geometría real del modelo, elástico tirando siempre):
+
+![Fuerza y energía de la palanca](docs/img/fuerza_palanca_p1.png)
+
+El empuje estático en la punta baja de 7.5 kgf (armada, -10°) a 1.7 kgf a 50°, porque el elástico se acorta y su línea de acción se acerca al pivote. Entre -10° y 30° (donde llega la palanca al golpear) el elástico entrega unos 10 J de los 17 J almacenados. El resto del recorrido ocurre por inercia.
+
 **Limitación física:** el contacto con la compuerta queda a ≈ 2–5 cm de la bisagra, así que la fuerza que se transmite es mucho menor que la de la punta de la palanca. Con la carga de ejemplo solo levanta bien unos 0.4 kg en la punta de la compuerta. Con 0.5 kg no llega al techo.
 
 ## 9. Propuesta 2 · Volante de inercia
@@ -334,6 +358,10 @@ La palanca armada está a -10° para que la punta quede dentro de la zona. Al di
 | Reducción | `GearJoint(volante, manivela, 0, N)` |
 | Embrague | `PinJoint(manivela, palanca)` que se agrega y se quita |
 
+| Armado (volante girando) | Apertura máxima |
+|---|---|
+| ![P2 armado](docs/img/esquema_p2_armado.png) | ![P2 apertura máxima](docs/img/esquema_p2_abierta.png) |
+
 **Detalles:**
 
 - **Energía:** `E = ½ I ω² = ½ · 4.54·10⁻³ · 150² = 51 J`.
@@ -348,6 +376,10 @@ La palanca armada está a -10° para que la punta quede dentro de la zona. Al di
 ## 10. Propuesta 3 · Elástico con leva de caracol
 
 **Idea:** misma palanca y elástico que la propuesta 1, pero el rearmado y el seguro los hace una leva de caracol accionada por un motor lento. El perfil de la leva baja la palanca poco a poco (arma); al caer el escalón, el elástico dispara.
+
+| Armado | Apertura máxima |
+|---|---|
+| ![P3 armado](docs/img/esquema_p3_armado.png) | ![P3 apertura máxima](docs/img/esquema_p3_abierta.png) |
 
 **Modelado.** El contacto leva-rodillo no se simula con colisiones (el caracol no es convexo y haría falta una descomposición en triángulos). En su lugar la leva es un **tope de ángulo que se mueve**: un `RotaryLimitJoint(mundo, palanca)` cuyo máximo depende del ángulo de la leva φ:
 
@@ -382,6 +414,10 @@ Réplica del boceto del equipo: una rueda con motor, una viga horizontal con ran
 | Ranura con juego | `GrooveJoint(viga, rueda, (sa, 0), (sb, 0), pasador_local)` |
 | Viga atada a la compuerta | `PivotJoint(viga, compuerta, (Lr, 0), (L, 0))` |
 
+| Armado | Apertura máxima |
+|---|---|
+| ![Equipo armado](docs/img/esquema_pn_armado.png) | ![Equipo apertura máxima](docs/img/esquema_pn_abierta.png) |
+
 **Resorte de torsión equivalente.** El elástico se enrolla en el borde de la rueda de radio `R`, así que una fuerza `F = k·x` produce un par `F·R` y un giro `x = R·θ`:
 
 ```
@@ -404,7 +440,7 @@ Lr      = |punta_compuerta − origen|
 
 **Recorrido del pasador.** Con `ψ_armado = −150°` el pasador avanza en x desde `−r_p cos 30°` hasta `+r_p` (a 0°): `Δx = r_p(1 + cos 30°) = 1.866 · 0.055 = 0.103 m`. Descontado el juego de 1.5 cm quedan ≈ 8.8 cm para mover la viga, suficientes para llevar la compuerta al techo.
 
-**Limitación.** Empujar la punta en horizontal pierde palanca al acercarse a 0°: el par sobre la bisagra es `F · y_punta` y se anula cuando la punta llega a la altura de la bisagra. Con la carga de ejemplo la compuerta apenas llega al techo de 14°. Con `ranura_largo` mayor, `pasador_radio` menor o `k` menor puede no abrir del todo.
+**Limitación.** Empujar la punta en horizontal pierde palanca al acercarse a 0°: el par sobre la bisagra es `F · y_punta` y se anula cuando la punta llega a la altura de la bisagra. La compuerta llega al techo de 14° en los barridos (sección 12), pero en la parte final del recorrido el empuje es casi nulo y avanza por inercia; con un `pasador_radio` demasiado chico o un `ranura_largo` mayor el recorrido de la viga ya no alcanza.
 
 **Retraer y cerrar.** El motor gira la rueda de vuelta; el pasador recorre el juego y llega a la pared izquierda, jala la viga y baja la compuerta. Al llegar a `ψ_armado + 0.01 rad` se vuelve a poner el seguro.
 
@@ -419,6 +455,12 @@ Todas las corridas parten de la compuerta de 0.3 kg con 0.3 kg de carga, con los
 | 3 · Elástico con leva | 16.9 | 192 | 1.7 | 6.9 | 0.97 | 2.09 |
 | Equipo · Rueda con ranura | 5.9 | 93 | 3.7 | 14.8 | 0.37 | 1.85 |
 
+![Ángulo de la compuerta](docs/img/comparativa_angulo.png)
+
+![Velocidad de la punta](docs/img/comparativa_velocidad.png)
+
+![Comparativa en barras](docs/img/comparativa_barras.png)
+
 Observaciones:
 
 - La propuesta 2 tiene el pico de velocidad más alto, pero la compuerta tarda un poco más en llegar a 14° que con la del equipo: parte del recorrido de la palanca ocurre antes de tocar la compuerta.
@@ -426,7 +468,30 @@ Observaciones:
 - La compuerta cierra cuando el motor rearma en las propuestas 1 y de equipo, cuando la leva baja la palanca en la 3, y por gravedad en la 2.
 - Los picos de velocidad de la punta incluyen choques del modelo rígido.
 
-**Carga máxima en la punta (propuesta 1):** abre hasta 14° con 0.3 y 0.4 kg; con 0.5 kg llega a unos 3° y con 0.6 kg ya no abre.
+### Sensibilidad a la carga
+
+![Barrido de carga](docs/img/barrido_carga.png)
+
+Ángulo máximo alcanzado al variar la masa extra en la punta (resto de parámetros iguales):
+
+| Propuesta | 0 kg | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.8 kg |
+|---|---|---|---|---|---|---|---|
+| 1 · Palanca, elástico y cuerda | 14.2° | 14.0° | 14.1° | 14.0° | **3.5°** | **-4.5°** | **-15.6°** |
+| 2 · Volante de inercia | 14.2° | 14.2° | 14.2° | 14.2° | 14.3° | 14.1° | 14.1° |
+| Equipo · Rueda con ranura | 14.0° | 14.0° | 14.0° | 14.0° | 14.0° | 14.0° | 14.0° |
+
+La propuesta 1 deja de abrir por encima de unos 0.4 kg. La 2 y la del equipo siguieron llegando al techo hasta 0.8 kg, pero eso es el ángulo máximo y no dice a qué velocidad lo hacen.
+
+### Sensibilidad a la rigidez y a la velocidad del volante
+
+![Barrido de parámetros](docs/img/barrido_parametros.png)
+
+| Propuesta | Parámetro | Resultado |
+|---|---|---|
+| 1 | `k` 1500–2500 N/m | No abre (-17.6°, -5° y 6.8°) |
+| 1 | `k` 3000–4500 N/m | Abre; el tiempo a 14° baja de 224 a 152 ms |
+| 2 | `volante_velocidad` 100–250 rad/s | Siempre abre; el tiempo baja de 165 a 65 ms |
+| Equipo | `k` 300–1500 N/m | Siempre abre; el tiempo baja de 189 a 58 ms |
 
 ## 13. Salidas: CSV, gráficas y capturas
 
@@ -440,6 +505,10 @@ Cada corrida **sobrescribe** el último resultado, con nombres fijos, en `salida
 | `propuesta_negra.csv/.png` | Propuesta del equipo |
 | `antes.png`, `despues1..3.png` | Capturas de `--auto` de las propuestas 1-3 |
 | `negra_antes.png`, `negra_despues1..3.png` | Capturas de `--auto` de la del equipo |
+
+Ejemplo de la gráfica que guarda cada corrida (propuesta 1; las otras tienen el mismo formato):
+
+![Salida de la propuesta 1](salidas/propuesta1_elastico_cuerda.png)
 
 **Columnas del CSV (propuestas 1-3):** `t, fase, angulo_deg, omega, vel_punta, angulo_palanca_deg, vel_punta_palanca, altura_punta, fuerza_contacto, tension, energia_elastico, energia_cinetica_compuerta, energia_cinetica_palanca, k`.
 
@@ -490,15 +559,19 @@ Cosas que fallaron durante el desarrollo y cómo se resolvieron.
 
 ## 17. Página web
 
+El sitio está en `docs/index.html`. Para publicarlo con **GitHub Pages**: *Settings → Pages → Source: Deploy from a branch → Branch `main`, carpeta `/docs`*. La dirección queda como `https://<usuario>.github.io/<repositorio>/`. En la pestaña del navegador se ve el icono simplificado del emblema (`iconos/icono.svg`, incrustado en la página).
+
 La página del proyecto se genera desde `web/`:
 
 ```bash
 .venv/bin/python web/extract.py    # corre las 4 simulaciones y escribe web/data.json
-.venv/bin/python web/build.py      # arma web/pagina.html con datos, gráficas y esquemas
+.venv/bin/python web/build.py      # arma docs/index.html con datos, gráficas y esquemas
+.venv/bin/python web/figuras.py    # figuras del README en docs/img/ (barridos incluidos: ~20 s)
 ```
 
 - `extract.py` ejecuta cada propuesta hasta terminar un ciclo, guarda las series (muestreadas cada 1 ms), las métricas y dos esquemas SVG por propuesta (armado y apertura máxima), generados a partir de la geometría del propio modelo.
-- `build.py` rellena `template.html` (los `__MARCADORES__`), incluidos el logo y el icono en base64, y escribe `pagina.html`.
+- `build.py` rellena `template.html` (los `__MARCADORES__`), incluidos el logo, el icono y las figuras de sensibilidad en base64, y escribe **`docs/index.html`**: un documento completo y autocontenido (imágenes y datos incrustados; solo las fuentes vienen de Google Fonts).
+- `figuras.py` genera las figuras de este README (`docs/img/`): gráficas comparativas, barridos, la gráfica de fuerza y los esquemas. Los esquemas se toman de `docs/index.html` y se convierten a PNG con Chrome en modo `headless`, así que necesita `google-chrome-stable` y haber corrido antes `extract.py` y `build.py`.
 - Las gráficas son SVG dibujados en el navegador con JavaScript puro: sin librerías externas, con valores al pasar el cursor.
 - Tema claro y oscuro automáticos. Fuentes: Big Shoulders Display, IBM Plex Sans y IBM Plex Mono.
 - Colores de las propuestas: azul, naranja, verde agua y amarillo, validados para daltonismo.
@@ -506,7 +579,7 @@ La página del proyecto se genera desde `web/`:
 
 ## 18. Pendientes
 
-- [ ] Confirmar qué significa "6 kgf": empuje del mecanismo en el punto de contacto, o carga que la compuerta debe levantar. Con la carga actual la propuesta 1 levanta unos 0.4 kg en la punta.
+- [ ] Confirmar qué significa "6 kgf": empuje del mecanismo en el punto de contacto, o carga que la compuerta debe levantar. Con la carga de ejemplo la propuesta 1 levanta hasta unos 0.4 kg en la punta; la 2 y la del equipo siguieron abriendo hasta 0.8 kg en el barrido.
 - [ ] Reemplazar masas, dimensiones y carga de ejemplo por medidas reales del robot.
 - [ ] Verificar físicamente que la leva de la propuesta 3 cabe junto a la palanca.
 - [ ] Elegir propuesta comparando costo, facilidad de fabricación y seguridad.
