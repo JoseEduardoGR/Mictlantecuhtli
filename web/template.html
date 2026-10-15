@@ -1,0 +1,817 @@
+<title>Mictlantecuhtli</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: informe técnico de taller. Hoja fría con tinta azul-negra, rojo del logo solo para lo que se mueve o se tensa;
+   cuatro colores de serie fijos, uno por propuesta. */
+:root {
+  --bg: #eceff5;
+  --surface: #fcfcfb;
+  --surface-2: #f1f3f8;
+  --ink: #0f1424;
+  --ink-2: #454c63;
+  --ink-3: #6a7088;
+  --line: #d3d8e4;
+  --accent: #c92f2a;
+  --link: #1f56b8;
+  --gate: #aebcd6;
+  --zone-fill: #e8e2f2;
+  --zone-line: #8b78b8;
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #1baf7a;
+  --s4: #eda100;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1016; --surface: #1a1a19; --surface-2: #22252c; --ink: #eef0f6; --ink-2: #b9bed0; --ink-3: #8d93a9;
+    --line: #333949; --accent: #ff6b62; --link: #7fb0ff; --gate: #44567a; --zone-fill: #27223a; --zone-line: #6f5fa3;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1016; --surface: #1a1a19; --surface-2: #22252c; --ink: #eef0f6; --ink-2: #b9bed0; --ink-3: #8d93a9;
+  --line: #333949; --accent: #ff6b62; --link: #7fb0ff; --gate: #44567a; --zone-fill: #27223a; --zone-line: #6f5fa3;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--link); }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: .01em; line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 5vw, 44px); }
+h3 { font-size: 26px; }
+p { margin: 0 0 1em; max-width: 68ch; }
+.wrap { max-width: 1080px; margin: 0 auto; }
+section { padding-block: 52px; border-top: 1px solid var(--line); }
+.eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.mono { font-family: var(--mono); }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+/* barra superior */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.top .wrap { display: flex; align-items: center; gap: 18px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); flex: none; }
+.brand img { width: 40px; height: 40px; border-radius: 50%; background: #fcfcfb; padding: 2px; }
+.brand b { font: 800 20px/1 var(--display); letter-spacing: .03em; }
+.top nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
+.top nav a { white-space: nowrap; text-decoration: none; color: var(--ink-2); font-size: 14px; padding: 8px 10px; border-radius: 4px; }
+.top nav a:hover { color: var(--ink); background: var(--surface-2); }
+
+/* portada */
+.hero { padding-block: 44px 40px; border-top: 0; display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; align-items: center; }
+.hero h1 { font-size: clamp(52px, 9vw, 104px); text-transform: uppercase; letter-spacing: .005em; }
+.hero h1 span { color: var(--accent); }
+.lede { font-size: 19px; line-height: 1.55; color: var(--ink-2); margin-top: 18px; }
+.specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0; margin-top: 28px; border: 1px solid var(--line); background: var(--surface); }
+.specs div { padding: 12px 14px; border-right: 1px solid var(--line); }
+.specs div:last-child { border-right: 0; }
+.specs dt { font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.specs dd { margin: 4px 0 0; font: 700 22px/1.1 var(--display); letter-spacing: .02em; }
+.specs { margin-bottom: 0; }
+figure { margin: 0; }
+figcaption { font-size: 13px; color: var(--ink-3); margin-top: 8px; max-width: 70ch; }
+.fig { background: var(--surface); border: 1px solid var(--line); padding: 12px; }
+svg { display: block; width: 100%; height: auto; max-width: 100%; }
+
+/* dos columnas de texto */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.cols ul, .cols ol { margin: 0; padding-left: 1.2em; }
+.cols li { margin-bottom: .5em; max-width: 60ch; }
+.rule { background: var(--surface); border: 1px solid var(--line); padding: 20px 22px; }
+.rule h3 { font-size: 22px; margin-bottom: 10px; }
+.rule dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 15px; }
+.rule dt { color: var(--ink-3); font: 500 12px/1.7 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.rule dd { margin: 0; }
+
+/* tarjetas de propuesta */
+.prop { background: var(--surface); border: 1px solid var(--line); margin-top: 28px; }
+.prop header { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; padding: 18px 22px 8px; border-bottom: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.chip i { width: 22px; height: 6px; background: var(--mc); display: inline-block; }
+.prop .tag { margin-left: auto; font: 500 12px/1 var(--mono); color: var(--ink-3); }
+.prop .body { padding: 0 22px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.prop .pair { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; gap: 14px; }
+.prop .pair figure { background: var(--bg); border: 1px solid var(--line); padding: 8px; }
+.prop .pair figcaption { margin-top: 4px; font: 500 12px/1.3 var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+.prop h4 { font: 500 12px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 8px; }
+.prop ol, .prop ul { margin: 0; padding-left: 1.2em; }
+.prop li { margin-bottom: .4em; }
+.nums { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 4px 0 0; }
+.nums div { min-width: 96px; }
+.nums dt { font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.nums dd { margin: 2px 0 0; font: 700 24px/1.1 var(--display); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.nums dd small { font: 400 13px var(--mono); color: var(--ink-3); letter-spacing: 0; }
+.warn { border-left: 3px solid var(--accent); padding: 6px 0 6px 12px; font-size: 14px; color: var(--ink-2); margin-top: 12px; }
+
+/* esquemas */
+.zone { fill: var(--zone-fill); stroke: var(--zone-line); stroke-dasharray: 5 4; stroke-width: 1.2; }
+.gate { fill: var(--gate); stroke: var(--ink-2); stroke-width: 1.2; }
+.load { fill: var(--ink-2); }
+.pivot { fill: var(--accent); }
+.part { fill: var(--mc); stroke: var(--ink); stroke-width: .8; stroke-opacity: .55; }
+.elastic { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.cord { stroke: var(--ink-2); stroke-width: 2.5; }
+.cord.off { stroke-dasharray: 3 5; opacity: .45; }
+.drum, .cam { fill: var(--surface); stroke: var(--ink-3); stroke-width: 1.6; }
+.crank { stroke: var(--ink-3); stroke-width: 2; }
+.rod { stroke: var(--mc); stroke-width: 9; }
+.slot { stroke: var(--surface); stroke-width: 3; }
+.scale { stroke: var(--ink-3); stroke-width: 2; }
+.lbl { font: 400 11px var(--mono); fill: var(--ink-2); }
+.lbl.acc { fill: var(--accent); }
+.lbl.big { font-size: 20px; }
+.lbl.big2 { font-size: 24px; letter-spacing: .08em; }
+.zonelbl { fill: var(--ink-3); }
+.m1 { --mc: var(--s1); } .m2 { --mc: var(--s2); } .m3 { --mc: var(--s3); } .m4 { --mc: var(--s4); }
+
+/* gráficas */
+.chartbox { background: var(--surface); border: 1px solid var(--line); padding: 18px 18px 10px; margin-top: 22px; }
+.chartbox h3 { font-size: 22px; }
+.chartbox p.sub { font-size: 14px; color: var(--ink-3); margin: 4px 0 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 6px 0 4px; font-size: 14px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 22px; height: 3px; display: inline-block; border-radius: 2px; }
+.plot { position: relative; }
+.plot svg text { font: 400 11px var(--mono); fill: var(--ink-3); }
+.plot .grid { stroke: var(--line); stroke-width: 1; }
+.plot .axis { stroke: var(--ink-3); stroke-width: 1; }
+.plot .ser { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.plot .dl { fill: var(--ink); font: 500 11px var(--body); }
+.plot .cross { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.plot .ytitle { fill: var(--ink-2); }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  padding: 8px 10px; font: 400 12px/1.5 var(--mono); color: var(--ink); min-width: 190px; z-index: 5; }
+.tip b { display: block; font-weight: 500; color: var(--ink-3); margin-bottom: 3px; }
+.tip div { display: flex; justify-content: space-between; gap: 14px; }
+.tip i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px; }
+.bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 22px; }
+.bar-card { background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; }
+.bar-card h3 { font-size: 20px; }
+.bar-card p { font-size: 13px; color: var(--ink-3); margin: 2px 0 12px; }
+.bar { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; margin-bottom: 9px; font-size: 13px; }
+.bar .n { grid-column: 1 / -1; color: var(--ink-2); }
+.bar .track { height: 12px; background: var(--surface-2); border-radius: 0; }
+.bar .fill { height: 100%; background: var(--mc); border-radius: 0 4px 4px 0; }
+.bar .v { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
+.tbl { overflow-x: auto; margin-top: 22px; background: var(--surface); border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td .sw { display: inline-block; width: 10px; height: 10px; background: var(--mc); margin-right: 8px; }
+details { margin-top: 16px; }
+summary { cursor: pointer; font: 500 13px var(--mono); color: var(--ink-2); }
+
+/* modelo y bitácora */
+pre { background: var(--surface); border: 1px solid var(--line); padding: 14px 16px; overflow-x: auto; font: 400 13px/1.6 var(--mono); margin: 0 0 16px; }
+.ptable { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); margin-bottom: 16px; }
+.ptable table { min-width: 620px; }
+.ptable td:first-child { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+.log { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--line); }
+.log li { position: relative; padding: 0 0 22px 22px; max-width: 70ch; }
+.log li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; background: var(--ink-3); }
+.log li.now::before { background: var(--accent); }
+.log b { font: 500 12px var(--mono); letter-spacing: .08em; color: var(--ink-3); display: block; text-transform: uppercase; }
+.todo { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.todo li { background: var(--surface); border: 1px solid var(--line); padding: 12px 14px; }
+.todo b { display: block; font-weight: 600; }
+.todo span { color: var(--ink-2); font-size: 14px; }
+footer { border-top: 1px solid var(--line); padding-block: 30px 44px; color: var(--ink-3); font-size: 14px; }
+footer p { max-width: 80ch; }
+
+
+.hero h1 { font-size: clamp(34px, 5.6vw, 68px); }
+.hero h1 span { font-size: .62em; display: inline-block; margin-top: .12em; }
+.logoplate { display: grid; place-items: center; }
+.logoplate img { width: min(100%, 380px); aspect-ratio: 1; border-radius: 50%; background: #fcfcfb; padding: 14px; box-shadow: 0 0 0 1px var(--line); }
+.upd { font: 400 13px var(--mono); color: var(--ink-3); margin: 14px 0 0; }
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+.card2 { background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; }
+.card2 h4 { font: 700 20px/1.1 var(--display); letter-spacing: .02em; margin: 0 0 8px; }
+.card2 p { font-size: 15px; margin: 0 0 .6em; }
+p.rel { font-size: 13px; color: var(--ink-3); margin-top: .8em; }
+ol.roman { list-style: upper-roman; padding-left: 1.6em; margin: 0; }
+ol.roman li { margin-bottom: .5em; max-width: 62ch; }
+ul.cmp { columns: 2; padding-left: 1.2em; margin: 0 0 1em; }
+ul.cmp li { margin-bottom: .3em; break-inside: avoid; }
+.people { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; counter-reset: n; }
+.people li { background: var(--surface); border: 1px solid var(--line); padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; counter-increment: n; }
+.people li::before { content: counter(n); font: 500 12px var(--mono); color: var(--ink-3); width: 1.6em; }
+.people .nm { flex: 1 1 200px; }
+.role { font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; background: var(--ink); color: var(--bg); }
+.role.pend { background: transparent; color: var(--ink-3); border: 1px dashed var(--ink-3); }
+.tbd { font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); border: 1px dashed var(--ink-3); padding: 4px 7px; }
+.members { list-style: none; padding: 0; margin: 0; }
+.members li { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.members li:last-child { border-bottom: 0; }
+.members small { font: 500 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.area { font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border: 1px solid var(--ink-3); color: var(--ink-2); }
+.credit { font-size: 14px; color: var(--ink-3); margin-top: 22px; }
+.refs { padding-left: 1.4em; margin: 18px 0 0; }
+.refs li { margin-bottom: 14px; max-width: 80ch; scroll-margin-top: 80px; overflow-wrap: anywhere; }
+.refs li:target { background: var(--surface-2); outline: 2px solid var(--accent); outline-offset: 4px; }
+.figsrc { columns: 3 220px; font: 400 13px/1.6 var(--mono); color: var(--ink-2); padding-left: 1.2em; }
+.specs + .upd { margin-top: 14px; }
+@media (max-width: 860px) {
+  ul.cmp { columns: 1; }
+  .hero, .cols, .prop .body { grid-template-columns: 1fr; }
+  .bars { grid-template-columns: 1fr; }
+  .top nav { display: none; }
+  .brand b { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<div class="top"><div class="wrap">
+  <a class="brand" href="#inicio"><img alt="Logo del equipo Mictlantecuhtli" src="data:image/png;base64,__LOGO_S__"><b>MICTLANTECUHTLI</b></a>
+  <nav aria-label="Secciones">
+    <a href="#proyecto">Proyecto</a><a href="#objetivos">Objetivos</a><a href="#marco">Marco teórico</a><a href="#arte">Estado del arte</a>
+    <a href="#propulsion">Propulsión</a><a href="#resultados">Resultados</a><a href="#equipo">Equipo</a><a href="#referencias">Referencias</a>
+  </nav>
+</div></div>
+
+<main class="wrap" id="inicio">
+<div class="hero">
+  <div>
+    <div class="eyebrow">Proyecto integrador · TESCI · Grupo 931-M</div>
+    <h1>Mictlantecuhtli<br><span>Robot de combate</span></h1>
+    <p class="lede">Prototipo de robot de combate diseñado y construido por estudiantes del TESCI, para aplicar mecánica, electrónica, programación y procesos de fabricación. Esta página reúne el proyecto y la investigación del sistema de propulsión frontal, y se actualiza conforme el equipo avanza.</p>
+    <dl class="specs">
+      <div><dt>Institución</dt><dd>TESCI</dd></div>
+      <div><dt>Grupo</dt><dd>931-M</dd></div>
+      <div><dt>Integrantes</dt><dd>20</dd></div>
+      <div><dt>Propuestas de propulsión</dt><dd>4</dd></div>
+    </dl>
+    <p class="upd">Última actualización: 14 de octubre de 2026</p>
+  </div>
+  <figure class="logoplate"><img alt="Emblema del equipo Mictlantecuhtli: casco robótico con calavera y penacho de cristales azules" src="data:image/png;base64,__LOGO__"></figure>
+</div>
+
+<section id="proyecto">
+  <div class="eyebrow">El proyecto</div>
+  <h2>Un robot de combate como práctica de ingeniería</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <h3 style="margin-bottom:10px">Introducción</h3>
+      <p>La robótica de combate integra mecánica, electrónica, programación, control y automatización para construir prototipos que compiten bajo condiciones específicas de funcionamiento y seguridad. A diferencia de un vehículo radiocontrolado, un robot de combate necesita una estructura resistente, un sistema de movimiento eficiente, una buena distribución del peso y una administración correcta de la energía.</p>
+      <p>En el Tecnológico de Estudios Superiores de Cuautitlán Izcalli (TESCI) hay interés por la robótica, pero falta una línea de trabajo formal y continua en robots de combate. <b>Mictlantecuhtli</b> busca establecer las bases técnicas y metodológicas para diseñar y construir un prototipo que integre sistemas mecánicos, electrónicos y de control, y evaluar su movilidad, estabilidad y resistencia en pruebas controladas.</p>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Planteamiento del problema</h3>
+      <p>Construir un robot de combate requiere más que unir piezas: hay que diseñar una estructura resistente, elegir materiales, instalar motores, organizar las conexiones eléctricas y comprobar que todo funcione. También pesan la duración de la batería, la estabilidad y la capacidad de desplazamiento.</p>
+      <p>Las dificultades principales son la falta de herramientas y materiales, el presupuesto limitado, la poca experiencia en los reglamentos de las competencias y la necesidad de asesoría. Si además no se documenta, parte de lo aprendido se pierde cuando los estudiantes terminan sus estudios. Por eso el proyecto aplica los procesos de fabricación y los relaciona con mecánica, electrónica y programación, y registra cada paso.</p>
+    </div>
+  </div>
+</section>
+
+<section id="objetivos">
+  <div class="eyebrow">Qué se quiere lograr</div>
+  <h2>Objetivos, hipótesis y justificación</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <h3 style="margin-bottom:10px">Objetivo general</h3>
+      <p>Diseñar y construir el robot de combate Mictlantecuhtli, integrando mecánica, electrónica, programación y procesos de fabricación, para obtener un prototipo que se desplace de manera controlada, detecte y enfrente a un robot oponente y use su mecanismo de ataque de forma controlada. Su funcionamiento se evaluará con pruebas de movilidad, estabilidad y resistencia, en condiciones seguras y con los materiales y recursos disponibles.</p>
+      <h3 style="margin:22px 0 10px">Objetivos específicos</h3>
+      <ol class="roman">
+        <li>Diseñar la estructura mecánica considerando resistencia, estabilidad, peso y distribución de sus componentes.</li>
+        <li>Implementar un sistema de movimiento eficiente, estable y controlado dentro del área de combate.</li>
+        <li>Integrar sensores para detectar la presencia y ubicación del oponente y los límites del área de combate.</li>
+        <li>Programar una estrategia de control para buscar, identificar y enfrentar al oponente, de forma autónoma o por control remoto.</li>
+        <li>Optimizar el desempeño con pruebas de velocidad, estabilidad, detección y capacidad de desplazamiento del oponente.</li>
+        <li>Seleccionar y aplicar los procesos de fabricación adecuados para elaborar y ensamblar las piezas, considerando materiales, precisión dimensional, resistencia y recursos.</li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Hipótesis general</h3>
+      <p>Si el robot se diseña y construye con una selección adecuada de materiales, el uso correcto de los procesos de fabricación y la integración de sus componentes mecánicos y electrónicos, será posible obtener un prototipo funcional, estable y resistente, capaz de desplazarse de manera controlada, detectar a un oponente y responder según el sistema de control implementado.</p>
+      <p>Se considera que una buena distribución del peso, motores apropiados y una buena instalación eléctrica mejoran el movimiento y la estabilidad. Se comprobará con pruebas de desplazamiento, detección y funcionamiento general, y con el registro de actividades y problemas encontrados.</p>
+      <h3 style="margin:22px 0 10px">Justificación</h3>
+      <p>El proyecto fortalece los conocimientos teóricos y prácticos de procesos de fabricación: selección de materiales según sus propiedades, procesos de manufactura, herramientas, tolerancias y ajustes. También integra electrónica, programación y control, fomenta el trabajo colaborativo y deja documentación como referencia para futuros proyectos de robótica en el TESCI, con prototipos de combate más eficientes y seguros dentro de las limitaciones de presupuesto, materiales e infraestructura.</p>
+    </div>
+  </div>
+</section>
+
+<section id="marco">
+  <div class="eyebrow">Fundamentos</div>
+  <h2>Marco teórico</h2>
+  <div class="grid-cards" style="margin-top:22px">
+    <div class="card2"><h4>A · Robótica</h4><p>Rama de la ingeniería que integra mecánica, electrónica, programación y control para diseñar, construir y operar máquinas capaces de hacer tareas específicas, con movimientos controlados.</p></div>
+    <div class="card2"><h4>B · Robots de combate</h4><p>Compiten en un área delimitada. Su diseño depende del peso permitido, las dimensiones, la potencia de los motores, la estabilidad, la resistencia de la estructura y las reglas de la competencia.</p></div>
+    <div class="card2"><h4>C · Mecánica aplicada</h4><p>Permite analizar el desplazamiento, la estabilidad, la distribución de masas y las fuerzas. La tracción de las ruedas, el peso total y la ubicación de los componentes influyen en el comportamiento.</p></div>
+    <div class="card2"><h4>D · Procesos de fabricación</h4><p>Corte, perforado, taladrado, lijado y desbaste, ensamblaje y fabricación aditiva (impresión 3D para soportes y separadores). El proceso se elige según material, geometría, precisión, costo y herramientas.</p><p class="rel">Lecturas relacionadas: <a href="#ref4">[4] Flores Pérez, 2018</a>, <a href="#ref5">[5] López Rodríguez, 2017</a>, <a href="#ref7">[7] Ortiz Prado et al., 2018</a>.</p></div>
+    <div class="card2"><h4>E · Materiales</h4><p>Dureza, resistencia, rigidez, densidad y facilidad de mecanizado. Metales como aluminio y acero para la estructura; plásticos técnicos para soportes y cubiertas, según cargas y peso permitido.</p></div>
+    <div class="card2"><h4>F · Chasis</h4><p>Estructura donde se montan motores, ruedas, circuitos y batería. Debe repartir bien el peso, permitir el mantenimiento, proteger la electrónica y evitar interferencias entre piezas móviles.</p></div>
+    <div class="card2"><h4>G · Motores y movimiento</h4><p>Convierten energía eléctrica en mecánica. Se eligen por voltaje, corriente, velocidad, par motor y peso del robot. Su disposición influye en el giro y la estabilidad.</p></div>
+    <div class="card2"><h4>H · Electrónica y alimentación</h4><p>Batería, controlador, circuitos de accionamiento, interruptores y sensores. El cableado se organiza para evitar desconexiones y cortocircuitos, y los componentes quedan protegidos y accesibles.</p></div>
+    <div class="card2"><h4>I · Control y sensores</h4><p>Coordinan los componentes según el operador o los sensores. Los sensores detectan al oponente y los límites del área. Con control remoto se requiere un receptor y una respuesta segura ante pérdida de comunicación.</p></div>
+    <div class="card2"><h4>J · Seguridad</h4><p>Equipo de protección personal al cortar, perforar y ensamblar; área controlada de pruebas; mecanismos de interacción desactivados durante los ajustes; revisión de fijaciones, cableado e interruptor de desconexión.</p></div>
+  </div>
+</section>
+
+<section id="arte">
+  <div class="eyebrow">Qué existe</div>
+  <h2>Estado del arte y antecedentes</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <h3 style="margin-bottom:10px">Antecedentes y estado actual</h3>
+      <p>La robótica de combate nació de los avances en robótica móvil, sistemas de control, motores eléctricos y materiales. Los prototipos son cada vez más compactos, con electrónica más pequeña y distintos mecanismos de desplazamiento e interacción. Las competencias imponen límites de peso, dimensiones y seguridad, lo que obliga a optimizar materiales y componentes.</p>
+      <p>Hoy el diseño busca reducir peso innecesario, reforzar el chasis, proteger los circuitos, distribuir la energía y facilitar el mantenimiento. El diseño asistido por computadora permite revisar dimensiones y anticipar interferencias antes de fabricar. El resultado final depende también de la calidad de fabricación, el ensamblaje y las pruebas.</p>
+      <p class="rel">Lecturas relacionadas: <a href="#ref1">[1] Calderón Huerta et al., 2024</a>, <a href="#ref3">[3] Escobar Guachambala et al., 2019</a>, <a href="#ref2">[2] Cedeño Pujota, 2023</a>, <a href="#ref6">[6] Ortega Navarro, 2015</a>.</p>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Proyectos similares: qué comparar</h3>
+      <ul class="cmp">
+        <li>Tipo de chasis y materiales</li><li>Peso y dimensiones</li><li>Configuración de motores y ruedas</li>
+        <li>Tipo de alimentación eléctrica</li><li>Sistema de control y comunicación</li><li>Facilidad de fabricación y mantenimiento</li><li>Medidas de seguridad</li>
+      </ul>
+      <p>La revisión sirve para reconocer ventajas, limitaciones y oportunidades de mejora, sin copiar diseños que no correspondan a las condiciones del proyecto.</p>
+      <h3 style="margin:22px 0 10px">En el TESCI y aportación</h3>
+      <p>En el TESCI hay interés por la robótica, pero con limitaciones de infraestructura, presupuesto, asesoría especializada y continuidad. La aportación de Mictlantecuhtli es aplicar de forma práctica los conocimientos de fabricación y diseño mecánico, e identificar los procedimientos adecuados a los recursos disponibles. Comprende también los planos, las decisiones de diseño, los procedimientos y las mejoras identificadas, como base para futuros proyectos.</p>
+    </div>
+  </div>
+</section>
+
+<section id="propulsion">
+  <div class="eyebrow">Desarrollo del proyecto</div>
+  <h2>Sistema de propulsión frontal</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <p>La metodología y el desarrollo del documento original quedaron pendientes. Esta parte los empieza con el primer sistema diseñado: el mecanismo que levanta de golpe la compuerta delantera para voltear al oponente. Reúne el diseño, las simulaciones y los pendientes, y se mejora conforme avanza el equipo.</p>
+      <dl class="specs">
+        <div><dt>Compuerta</dt><dd>25 cm</dd></div>
+        <div><dt>Espacio</dt><dd>54 × 12 cm</dd></div>
+        <div><dt>Fuerza objetivo</dt><dd>~6 kgf</dd></div>
+        <div><dt>Propuestas</dt><dd>4</dd></div>
+      </dl>
+    </div>
+    <figure class="fig">
+      __SVG_CONCEPTO__
+      <figcaption>Idea general: la compuerta cuelga inclinada al frente. Al dispararse gira hacia arriba y empuja por debajo al robot rival.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="objetivo">
+  <div class="eyebrow">Qué se busca</div>
+  <h2>Levantar al oponente, rápido y con fuerza</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <p>La compuerta frontal va articulada en su parte alta y, en reposo, cuelga a unos 45° con la punta hacia el piso. El mecanismo de propulsión tiene que moverla hacia arriba lo más rápido posible. Cuando el rival queda sobre la compuerta, se le levanta de la superficie y se le voltea.</p>
+      <p>La velocidad es lo más importante al disparar. El rearmado (retraer y volver a tensar) puede ser lento, siempre que la compuerta regrese a su posición cerrada antes del siguiente ataque.</p>
+    </div>
+    <div class="rule">
+      <h3>Criterios de diseño</h3>
+      <dl>
+        <dt>Velocidad</dt><dd>Lo más rápida posible al disparar. Las propuestas actuales llegan al tope en 0.09 a 0.19 s.</dd>
+        <dt>Fuerza</dt><dd>Unos 6 kgf de empuje. Falta confirmar si es el empuje del mecanismo o la carga que levanta la compuerta.</dd>
+        <dt>Altura</dt><dd>El mecanismo debe ser lo más bajo posible.</dd>
+        <dt>Cierre</dt><dd>La compuerta vuelve a cerrar sola, por gravedad o con el motor.</dd>
+        <dt>Simpleza</dt><dd>Evitar rieles y piezas que deslicen y tengan que guiarse.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="restricciones">
+  <div class="eyebrow">Dónde puede ir cada pieza</div>
+  <h2>Un espacio estrecho y largo</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <p>Todo el mecanismo cabe en un rectángulo de unos <b>54 cm de largo por 12 cm de alto</b>, a la izquierda y por debajo de la bisagra. Arriba, abajo y a la derecha de la compuerta no puede haber nada. Hacia la izquierda se pueden ocupar hasta 50 cm.</p>
+      <p>Por la franja superior, la compuerta solo puede abrirse unos 14° por encima de la horizontal. Eso permite recorrer unos 59° desde su posición cerrada.</p>
+      <p><b>Importante:</b> el punto donde cualquier pieza puede empujar la compuerta queda a menos de 5 cm de la bisagra. Ahí hay muy poca palanca. Por eso la fuerza útil está limitada, y buena parte del diseño consiste en resolver ese cuello de botella.</p>
+    </div>
+    <figure class="fig">
+      __SVG_ZONA__
+      <figcaption>Medidas tomadas del boceto de referencia, con la compuerta de 25 cm como escala.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="propuestas">
+  <div class="eyebrow">Alternativas simuladas</div>
+  <h2>Cuatro formas de dar el golpe</h2>
+  <p style="margin-top:14px">Las cuatro usan la misma compuerta y el mismo espacio. Cada esquema muestra el mecanismo armado y en el instante de apertura máxima, tomados de la simulación.</p>
+
+  <article class="prop m1" id="p1">
+    <header><h3>Palanca con elástico y cuerda</h3><span class="chip"><i></i>Propuesta 1</span><span class="tag">elástico · motor con reducción</span></header>
+    <div class="body">
+      <div class="pair">
+        <figure>__P1_ARM__<figcaption>Armado</figcaption></figure>
+        <figure>__P1_OPEN__<figcaption>Apertura máxima</figcaption></figure>
+      </div>
+      <div>
+        <h4>Cómo funciona</h4>
+        <ol>
+          <li>Una palanca larga, de una sola bisagra, descansa horizontal bajo la compuerta.</li>
+          <li>El motor jala una cuerda que gira la palanca hacia abajo y estira el elástico, que guarda la energía.</li>
+          <li>La cuerda tensa mantiene la palanca quieta: es el seguro.</li>
+          <li>Al soltar la cuerda, el elástico tira de un brazo corto y la punta de la palanca sube y golpea la compuerta.</li>
+          <li>La compuerta se apoya en la palanca y se cierra cuando el motor rearma.</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Resultados de simulación</h4>
+        <dl class="nums">
+          <div><dt>Energía</dt><dd>__P1_E__<small> J</small></dd></div>
+          <div><dt>Abre en</dt><dd>__P1_T__<small> ms</small></dd></div>
+          <div><dt>Punta</dt><dd>__P1_V__<small> m/s</small></dd></div>
+          <div><dt>Empuje</dt><dd>7.5<small> kgf</small></dd></div>
+        </dl>
+        <ul style="margin-top:12px">
+          <li>Empuje sostenido, fácil de ajustar con la rigidez del elástico.</li>
+          <li>El motor solo necesita fuerza para tensar, no para disparar.</li>
+        </ul>
+        <div class="warn">Necesita cuerda, seguro y un motor con reducción 10:1. El elástico almacena 17 J, que son peligrosos al manipularlo.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="prop m2" id="p2">
+    <header><h3>Volante de inercia</h3><span class="chip"><i></i>Propuesta 2</span><span class="tag">sin elástico · embrague · biela</span></header>
+    <div class="body">
+      <div class="pair">
+        <figure>__P2_ARM__<figcaption>Armado (volante girando)</figcaption></figure>
+        <figure>__P2_OPEN__<figcaption>Apertura máxima</figcaption></figure>
+      </div>
+      <div>
+        <h4>Cómo funciona</h4>
+        <ol>
+          <li>Un motor pequeño acelera, sin prisa, un volante de 3 kg a 150 rad/s. Ahí se guarda la energía como movimiento (51 J).</li>
+          <li>Al disparar, un embrague engancha una biela entre la manivela del volante y el brazo de abajo de la palanca, en la fase correcta.</li>
+          <li>Un tren de engranes con reducción 5:1 pone el volante y la manivela en el mismo eje, de modo que la inercia del volante "pese" 25 veces más sobre la palanca.</li>
+          <li>La manivela da una vuelta: sube la palanca y la regresa. Después el embrague suelta y el volante vuelve a acelerar.</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Resultados de simulación</h4>
+        <dl class="nums">
+          <div><dt>Energía</dt><dd>__P2_E__<small> J</small></dd></div>
+          <div><dt>Abre en</dt><dd>__P2_T__<small> ms</small></dd></div>
+          <div><dt>Punta</dt><dd>__P2_V__<small> m/s</small></dd></div>
+          <div><dt>Cierre</dt><dd>__P2_C__<small> s</small></dd></div>
+        </dl>
+        <ul style="margin-top:12px">
+          <li>La más rápida de las cuatro y no necesita elástico.</li>
+          <li>La compuerta cae sola por gravedad al terminar el golpe.</li>
+        </ul>
+        <div class="warn">El golpe es violento: la biela soporta picos de 14 000 a 26 000 N en el modelo rígido. Pide piezas robustas, un embrague preciso y mucho cuidado de seguridad con 51 J girando. Sin la reducción 5:1 el mecanismo se atora.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="prop m3" id="p3">
+    <header><h3>Elástico con leva de caracol</h3><span class="chip"><i></i>Propuesta 3</span><span class="tag">elástico · una sola pieza arma y dispara</span></header>
+    <div class="body">
+      <div class="pair">
+        <figure>__P3_ARM__<figcaption>Armado</figcaption></figure>
+        <figure>__P3_OPEN__<figcaption>Apertura máxima</figcaption></figure>
+      </div>
+      <div>
+        <h4>Cómo funciona</h4>
+        <ol>
+          <li>Misma palanca y mismo elástico que la propuesta 1.</li>
+          <li>Un motor lento gira una leva de caracol: su perfil sube poco a poco y empuja la palanca hacia abajo, estirando el elástico.</li>
+          <li>Al final de la subida, la leva tiene un escalón. Cuando el escalón pasa, la palanca queda libre y el elástico dispara.</li>
+          <li>La leva sigue girando y vuelve a bajar la palanca. Una vuelta es un ciclo completo.</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Resultados de simulación</h4>
+        <dl class="nums">
+          <div><dt>Energía</dt><dd>__P3_E__<small> J</small></dd></div>
+          <div><dt>Abre en</dt><dd>__P3_T__<small> ms</small></dd></div>
+          <div><dt>Punta</dt><dd>__P3_V__<small> m/s</small></dd></div>
+          <div><dt>Ciclo</dt><dd>__P3_Y__<small> s</small></dd></div>
+        </dl>
+        <ul style="margin-top:12px">
+          <li>Quita la cuerda y el seguro: la leva hace las dos funciones.</li>
+          <li>Mismo desempeño que la propuesta 1.</li>
+        </ul>
+        <div class="warn">Pendiente de verificar físicamente. La leva está modelada como un tope de ángulo móvil, no con contacto real. Para dar los 4 cm de recorrido necesitaría unos 12 cm de diámetro y la palanca cruza esa zona.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="prop m4" id="p4">
+    <header><h3>Rueda con ranura (ariete)</h3><span class="chip"><i></i>Propuesta del equipo</span><span class="tag">elástico enrollado · viga atada a la compuerta</span></header>
+    <div class="body">
+      <div class="pair">
+        <figure>__P4_ARM__<figcaption>Armado</figcaption></figure>
+        <figure>__P4_OPEN__<figcaption>Apertura máxima</figcaption></figure>
+      </div>
+      <div>
+        <h4>Cómo funciona</h4>
+        <ol>
+          <li>Una rueda con motor lleva un pasador que corre por una ranura de la viga horizontal, con 1.5 cm de juego libre.</li>
+          <li>El elástico va enrollado en la rueda. Un seguro la sostiene armada.</li>
+          <li>Al soltar, la rueda acelera, el pasador recorre el juego y golpea el fondo de la ranura: eso es el ariete, que empuja la viga.</li>
+          <li>La viga está articulada a la punta de la compuerta, así que la empuja hacia arriba y a la derecha.</li>
+          <li>Para retraer, el motor regresa la rueda y el pasador jala la viga por el otro extremo de la ranura, que baja la compuerta.</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Resultados de simulación</h4>
+        <dl class="nums">
+          <div><dt>Energía</dt><dd>__P4_E__<small> J</small></dd></div>
+          <div><dt>Abre en</dt><dd>__P4_T__<small> ms</small></dd></div>
+          <div><dt>Punta</dt><dd>__P4_V__<small> m/s</small></dd></div>
+          <div><dt>Cierre</dt><dd>__P4_C__<small> s</small></dd></div>
+        </dl>
+        <ul style="margin-top:12px">
+          <li>Es la que menos energía necesita y empuja desde la punta, donde hay más palanca.</li>
+          <li>La misma viga abre y cierra la compuerta.</li>
+        </ul>
+        <div class="warn">Empujar en horizontal pierde fuerza al acercarse a 0°, y por eso apenas llega al tope de 14° con la carga de ejemplo. El empuje es de 5 a 7 kgf al inicio. La ranura se modeló recta, no en curva.</div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section id="resultados">
+  <div class="eyebrow">Comparación</div>
+  <h2>Resultados lado a lado</h2>
+  <p style="margin-top:14px">Todas las corridas parten del mismo punto: compuerta de 0.3 kg con 0.3 kg de carga en la punta. El tiempo cero es el instante en que se dispara el mecanismo.</p>
+
+  <div class="chartbox">
+    <h3>Ángulo de la compuerta</h3>
+    <p class="sub">Grados contra tiempo. La línea punteada marca el tope superior de 14°. Pasa el cursor para ver cada valor.</p>
+    <div class="legend" id="leg1"></div>
+    <div class="plot" id="chart-ang" role="img" aria-label="Ángulo de la compuerta contra tiempo para las cuatro propuestas"></div>
+  </div>
+  <div class="chartbox">
+    <h3>Velocidad de la punta de la compuerta</h3>
+    <p class="sub">Metros por segundo durante los primeros 350 ms. Los picos cortos son choques del modelo rígido.</p>
+    <div class="legend" id="leg2"></div>
+    <div class="plot" id="chart-vel" role="img" aria-label="Velocidad de la punta de la compuerta contra tiempo para las cuatro propuestas"></div>
+  </div>
+
+  <div class="bars">
+    <div class="bar-card"><h3>Tiempo hasta 14°</h3><p>Milisegundos desde el disparo. Menos es mejor.</p>__BAR_T__</div>
+    <div class="bar-card"><h3>Energía almacenada</h3><p>Julios antes de disparar.</p>__BAR_E__</div>
+    <div class="bar-card"><h3>Velocidad pico</h3><p>Punta de la compuerta, m/s.</p>__BAR_V__</div>
+  </div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Propuesta</th><th>Energía</th><th>Abre en</th><th>Punta máx.</th><th>ω máx.</th><th>Cierra</th><th>Fuerza</th><th>Lo más importante</th></tr></thead>
+    <tbody>
+      <tr class="m1"><td><span class="sw"></span>1 · Palanca, elástico y cuerda</td><td class="n">__P1_E__ J</td><td class="n">__P1_T__ ms</td><td class="n">__P1_V__ m/s</td><td class="n">__P1_W__ rad/s</td><td class="n">__P1_C__ s</td><td>7.5 kgf estáticos en la punta de la palanca</td><td>Equilibrada y fácil de ajustar</td></tr>
+      <tr class="m2"><td><span class="sw"></span>2 · Volante de inercia</td><td class="n">__P2_E__ J</td><td class="n">__P2_T__ ms</td><td class="n">__P2_V__ m/s</td><td class="n">__P2_W__ rad/s</td><td class="n">__P2_C__ s</td><td>Impulsiva: 14 000 a 26 000 N de pico en la biela</td><td>La más rápida; sin elástico; esfuerzos altos</td></tr>
+      <tr class="m3"><td><span class="sw"></span>3 · Elástico con leva</td><td class="n">__P3_E__ J</td><td class="n">__P3_T__ ms</td><td class="n">__P3_V__ m/s</td><td class="n">__P3_W__ rad/s</td><td class="n">__P3_C__ s</td><td>7.5 kgf estáticos en la punta de la palanca</td><td>Menos piezas; la leva falta verificar</td></tr>
+      <tr class="m4"><td><span class="sw"></span>Equipo · Rueda con ranura</td><td class="n">__P4_E__ J</td><td class="n">__P4_T__ ms</td><td class="n">__P4_V__ m/s</td><td class="n">__P4_W__ rad/s</td><td class="n">__P4_C__ s</td><td>5 a 7 kgf al inicio del empuje</td><td>La de menor energía; poca palanca arriba</td></tr>
+    </tbody>
+  </table></div>
+  <details>
+    <summary>Ver los datos de las gráficas como tabla</summary>
+    <div class="tbl"><table id="datatable"></table></div>
+  </details>
+  <div class="warn" style="margin-top:18px">Los números de energía, velocidad y fuerza salen de una simulación 2D con piezas rígidas y masas de ejemplo. Sirven para comparar propuestas entre sí, no son mediciones del robot real. Los picos de fuerza de los choques están exagerados por la rigidez del modelo.</div>
+</section>
+
+<section id="modelo">
+  <div class="eyebrow">Cómo se simuló</div>
+  <h2>Modelo físico</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <p>La simulación es en 2D, vista lateral, con gravedad hacia abajo. Se hizo en Python con Pymunk (física de cuerpos rígidos) y Pygame para la visualización. Cada corrida guarda un CSV y una gráfica.</p>
+      <p>La compuerta, las palancas, la viga y la rueda son cuerpos rígidos con masa y centro de gravedad reales. Las articulaciones son uniones de pivote, y los topes de ángulo son límites rotativos.</p>
+      <h3 style="margin:22px 0 10px">Supuestos</h3>
+      <ul style="margin:0;padding-left:1.2em">
+        <li>El elástico es lineal (fuerza = k × estiramiento) y solo tira.</li>
+        <li>El motor es ideal: velocidad constante hasta su par máximo, con reducción.</li>
+        <li>Paso de física de 1/4000 s. Con pasos más grandes el mecanismo atraviesa piezas y da resultados falsos.</li>
+        <li>La escala sale de un boceto con la compuerta de 25 cm. Las masas son de ejemplo.</li>
+        <li>Hay fricción en las bisagras y contacto sin rebote.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="ptable"><table>
+        <thead><tr><th>Parámetro</th><th>Valor de ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>compuerta_largo</td><td>0.25 m</td></tr>
+          <tr><td>compuerta_masa / carga_punta</td><td>0.30 kg / 0.30 kg</td></tr>
+          <tr><td>angulo_cerrado / abierto</td><td>-45° / 14°</td></tr>
+          <tr><td>palanca_largo / masa</td><td>0.25 m / 0.20 kg</td></tr>
+          <tr><td>k · extension_armado</td><td>3400 N/m · 0.10 m</td></tr>
+          <tr><td>motor_torque · reduccion</td><td>2.5 N·m · 10:1</td></tr>
+          <tr><td>volante_masa · velocidad · reducción</td><td>3 kg · 150 rad/s · 5:1</td></tr>
+          <tr><td>pasador_radio · ranura_largo</td><td>0.055 m · 0.015 m</td></tr>
+          <tr><td>dt</td><td>1/4000 s</td></tr>
+        </tbody>
+      </table></div>
+      <pre>python compuerta.py --propuesta 1   # elástico + cuerda
+python compuerta.py --propuesta 2   # volante de inercia
+python compuerta.py --propuesta 3   # elástico + leva
+python propuesta_negra.py           # rueda con ranura
+# agrega --auto para correr sin ventana</pre>
+      <p style="font-size:14px;color:var(--ink-3)">Controles: ESPACIO dispara, A rearma, R reinicia, P pausa y las flechas arriba/abajo cambian la rigidez (o la velocidad del volante).</p>
+    </div>
+  </div>
+</section>
+
+<section id="bitacora">
+  <div class="eyebrow">Para seguir mejorando</div>
+  <h2>Bitácora y pendientes</h2>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <h3 style="margin-bottom:14px">Historia del diseño</h3>
+      <ul class="log">
+        <li><b>Versión 1</b>Cuña horizontal sobre un riel. Se descartó: necesitaba rieles y se atoraba con pendientes fuertes.</li>
+        <li><b>Versión 2</b>Palanca de una sola bisagra con elástico y cuerda. Sin piezas deslizantes.</li>
+        <li><b>Versión 3</b>Escala real: compuerta de 25 cm y espacio de 54 × 12 cm. Palanca larga y horizontal.</li>
+        <li><b>Versión 4</b>Dos alternativas: volante de inercia sin elástico y leva de caracol.</li>
+        <li class="now"><b>Versión 5 · actual</b>Réplica de la propuesta del equipo (rueda con ranura y ariete) y esta página.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-bottom:14px">Pendientes y preguntas abiertas</h3>
+      <ul class="todo">
+        <li><b>Definir los 6 kg</b><span>¿Es la fuerza de empuje de la palanca o la carga en la punta de la compuerta? Cambia mucho el diseño: con la carga actual solo se levantan unos 0.4 kg en la punta.</span></li>
+        <li><b>Medidas y masas reales</b><span>Peso de la compuerta, de lo que debe levantar y dimensiones finales del chasis.</span></li>
+        <li><b>Elegir propuesta</b><span>Comparar costo, facilidad de fabricación y seguridad entre las cuatro.</span></li>
+        <li><b>Verificar la leva</b><span>Revisar si el caracol cabe físicamente junto a la palanca.</span></li>
+        <li><b>Prueba física</b><span>Medir un elástico real (k), un motor real y el choque contra un robot rival.</span></li>
+        <li><b>Seguridad</b><span>Definir seguros mecánicos para 17 J (elástico) o 51 J (volante), y un protocolo para manipular el mecanismo armado.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section id="equipo">
+  <div class="eyebrow">Quiénes lo hacen</div>
+  <h2>Equipo y créditos</h2>
+  <div class="cols" style="margin-top:22px">
+    <div class="rule">
+      <h3>Dirección académica</h3>
+      <dl>
+        <dt>Profesora</dt><dd><span class="tbd">por definir</span></dd>
+        <dt>Asesora</dt><dd><span class="tbd">por definir</span></dd>
+        <dt>Materia</dt><dd><span class="tbd">por definir</span></dd>
+        <dt>Grupo</dt><dd>931-M</dd>
+        <dt>Institución</dt><dd>Tecnológico de Estudios Superiores de Cuautitlán Izcalli (TESCI)</dd>
+      </dl>
+    </div>
+    <div class="rule">
+      <h3>Cargos del equipo</h3>
+      <dl>
+        <dt>Jefe general</dt><dd>González Rosales José Eduardo</dd>
+        <dt>Jefe de programación</dt><dd>González Rosales José Eduardo</dd>
+        <dt>Jefe de diseño</dt><dd>Aguilar Pérez Christian Yahel</dd>
+        <dt>Jefe de construcción</dt><dd>Razo Vázquez Alfredo Ulises</dd>
+        <dt>Subjefe</dt><dd>Mena Piña Vania Elizabeth</dd>
+        <dt>Secretaria</dt><dd>Medina López Olinzi</dd>
+        <dt>Tesorera</dt><dd>Medina López Olinzi</dd>
+      </dl>
+      <p style="font-size:14px;color:var(--ink-3);margin:12px 0 0">Algunas personas tienen más de un cargo.</p>
+    </div>
+  </div>
+  <h3 style="margin:30px 0 14px">Áreas de trabajo</h3>
+  <div class="grid-cards">__AREAS__</div>
+  <h3 style="margin:30px 0 14px">Integrantes</h3>
+  <ul class="people">__PEOPLE__</ul>
+</section>
+
+<section id="referencias">
+  <div class="eyebrow">Fuentes</div>
+  <h2>Referencias bibliográficas</h2>
+  <p style="margin-top:14px">Estas siete referencias aparecen en el documento del proyecto, en formato APA. Los enlaces se copiaron del documento y no se verificaron uno por uno.</p>
+  <ol class="refs">
+    <li id="ref1">Calderón Huerta, J. U., González Trigueros, J. E., Muñoz Rivera, E., Ramírez Berduzco, F., Reyes González, P. del R., Peñaran Prieto, M. J., &amp; Almanza Ojeda, D. L. (<b>2024</b>). <i>Diseño y construcción de un robot de combate con rutinas programables</i>. Jóvenes en la Ciencia, 28. <a href="https://doi.org/10.15174/jc.2024.4261">https://doi.org/10.15174/jc.2024.4261</a></li>
+    <li id="ref2">Cedeño Pujota, S. X. (<b>2023</b>). <i>Robot de batalla de bajo peso</i> [Trabajo de titulación, Universidad Técnica del Norte]. Repositorio Digital de la Universidad Técnica del Norte. <a href="https://repositorio.utn.edu.ec/handle/123456789/14600">https://repositorio.utn.edu.ec/handle/123456789/14600</a></li>
+    <li id="ref3">Escobar Guachambala, M. Á., Aquino Arroba, S. M., Pozo Safla, E. R., &amp; Choto Chariguaman, L. S. (<b>2019</b>). <i>Tecnología CAD CAM aplicada al diseño de robots de batalla</i>. Ciencia Digital, 3(3.2). <a href="https://doi.org/10.33262/cienciadigital.v3i3.2.721">https://doi.org/10.33262/cienciadigital.v3i3.2.721</a></li>
+    <li id="ref4">Flores Pérez, L. (<b>2018</b>). <i>Procesos de fabricación</i> [Manual de prácticas]. Instituto Tecnológico de Toluca, Tecnológico Nacional de México. <a href="https://rinacional.tecnm.mx/jspui/handle/TecNM/11929">https://rinacional.tecnm.mx/jspui/handle/TecNM/11929</a></li>
+    <li id="ref5">López Rodríguez, J. (<b>2017</b>). <i>Fundamentos de procesos convencionales de fabricación mecánica</i>. Universidad Politécnica de Cartagena. <a href="https://doi.org/10.31428/10317/6068">https://doi.org/10.31428/10317/6068</a></li>
+    <li id="ref6">Ortega Navarro, G. M. (<b>2015</b>). <i>Diseño y construcción de un robot de batalla telemanipulado</i> [Trabajo de titulación de Ingeniería Mecánica, Escuela Superior Politécnica del Litoral]. Repositorio DSpace ESPOL. <a href="https://www.dspace.espol.edu.ec/handle/123456789/30245">https://www.dspace.espol.edu.ec/handle/123456789/30245</a></li>
+    <li id="ref7">Ortiz Prado, A., Ruiz Cervantes, O., &amp; Ortiz Valera, J. A. (<b>2018</b>). <i>Procesos de manufactura I</i>. Facultad de Ingeniería, Universidad Nacional Autónoma de México. <a href="https://www.ingenieria.unam.mx/base_books.php?id=28">https://www.ingenieria.unam.mx/base_books.php?id=28</a></li>
+  </ol>
+  <details>
+    <summary>Fuentes de las figuras del documento original</summary>
+    <p style="margin-top:12px;font-size:14px;color:var(--ink-2)">Las imágenes del documento vienen de los sitios siguientes. No se reproducen aquí; falta registrar autor y fecha de cada una.</p>
+    <ul class="figsrc">
+      <li>Fig. 1.2: propia (modelo prototipo de Mictlantecuhtli)</li><li>Fig. 1.3: openwindowinstitute</li><li>Fig. 1.4: robojackets.org</li>
+      <li>Fig. 1.5: maze.co</li><li>Fig. 1.6: grabcad.com</li><li>Fig. 1.7: embeddedcomputing.com</li><li>Fig. 1.8: fdatabot.com</li>
+      <li>Fig. 1.9: www.psu.edu</li><li>Fig. 1.10: www.3ds.com</li><li>Fig. 2.1: stock.adobe.com</li><li>Fig. 2.2: www.pebway.com</li>
+      <li>Fig. 2.3: www.fictiv.com</li><li>Fig. 2.4: maidatechenclosure.com</li><li>Fig. 2.5: arctosrobotics.com</li><li>Fig. 2.6: protosupplies.com</li>
+      <li>Fig. 2.7: www.researchgate.net</li><li>Fig. 2.8: app.leonardo.ai</li><li>Fig. 2.9: www.laifappe.com</li><li>Fig. 2.10: shop.robotsmashingleague.com</li>
+      <li>Fig. 3.1: www.servomagazine.com</li><li>Fig. 3.2: www.etsy.com</li><li>Fig. 3.3: www.chiefdelphi.com</li><li>Fig. 3.4: irobotics.illinois.edu</li><li>Fig. 3.5: xometry.pro</li>
+    </ul>
+  </details>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>Mictlantecuhtli</b> · Proyecto integrador, grupo 931-M · TESCI.</p>
+  <p>Página de muestra para publicar y mejorar la investigación. Las cifras de la propulsión son resultados de simulación con valores de ejemplo, y se irán reemplazando por medidas reales.</p>
+</div></footer>
+
+<script>
+const D = __DATA__;
+const KEYS = ["p1", "p2", "p3", "pn"];
+const NAMES = { p1: "1 · Palanca, elástico y cuerda", p2: "2 · Volante de inercia", p3: "3 · Elástico con leva", pn: "Equipo · Rueda con ranura" };
+const SHORT = { p1: "Propuesta 1", p2: "Propuesta 2", p3: "Propuesta 3", pn: "Equipo" };
+const VAR = { p1: "--s1", p2: "--s2", p3: "--s3", pn: "--s4" };
+
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function legend(id) {
+  const el = document.getElementById(id);
+  el.innerHTML = KEYS.map(k => `<span><i style="background:var(${VAR[k]})"></i>${NAMES[k]}</span>`).join("");
+}
+
+function lineChart(host, opt) {
+  const el = document.getElementById(host);
+  const W = Math.max(300, el.clientWidth), H = W < 520 ? 260 : 320;
+  const narrow = W < 560;
+  const m = { l: 46, r: narrow ? 14 : 150, t: 12, b: 38 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const sx = x => m.l + (x - opt.x0) / (opt.x1 - opt.x0) * iw;
+  const sy = y => m.t + ih - (y - opt.y0) / (opt.y1 - opt.y0) * ih;
+  let g = "";
+  for (const y of opt.yticks) g += `<line class="grid" x1="${m.l}" x2="${W - m.r}" y1="${sy(y)}" y2="${sy(y)}"/><text x="${m.l - 8}" y="${sy(y) + 4}" text-anchor="end">${y}</text>`;
+  for (const x of opt.xticks) g += `<line class="grid" x1="${sx(x)}" x2="${sx(x)}" y1="${m.t}" y2="${m.t + ih}" opacity=".5"/><text x="${sx(x)}" y="${H - 18}" text-anchor="${x === opt.x1 ? "end" : "middle"}">${x}</text>`;
+  g += `<line class="axis" x1="${m.l}" x2="${W - m.r}" y1="${m.t + ih}" y2="${m.t + ih}"/>`;
+  g += `<text x="${m.l + iw / 2}" y="${H - 2}" text-anchor="middle" class="ytitle">${opt.xlabel}</text>`;
+  g += `<text x="12" y="${m.t + ih / 2}" text-anchor="middle" class="ytitle" transform="rotate(-90 12 ${m.t + ih / 2})">${opt.ylabel}</text>`;
+  if (opt.ref != null) g += `<line x1="${m.l}" x2="${W - m.r}" y1="${sy(opt.ref)}" y2="${sy(opt.ref)}" stroke="var(--ink-3)" stroke-dasharray="2 4"/>`;
+  if (opt.x0 < 0) g += `<line x1="${sx(0)}" x2="${sx(0)}" y1="${m.t}" y2="${m.t + ih}" stroke="var(--ink-3)" stroke-dasharray="2 4"/><text x="${sx(0) + 4}" y="${m.t + 11}">disparo</text>`;
+  const ends = [];
+  for (const k of KEYS) {
+    const d = D[k], pts = [];
+    let last = null;
+    for (let i = 0; i < d.t.length; i++) {
+      const t = d.t[i];
+      if (t < opt.x0 || t > opt.x1) continue;
+      pts.push(`${sx(t).toFixed(1)},${sy(Math.min(opt.y1, Math.max(opt.y0, d[opt.key][i]))).toFixed(1)}`);
+      last = [t, d[opt.key][i]];
+    }
+    g += `<polyline class="ser" style="stroke:var(${VAR[k]})" points="${pts.join(" ")}"/>`;
+    if (last) ends.push({ k, y: sy(Math.min(opt.y1, Math.max(opt.y0, last[1]))) });
+  }
+  if (!narrow) {
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 15) ends[i].y = ends[i - 1].y + 15;
+    for (const e of ends) g += `<text class="dl" x="${W - m.r + 8}" y="${e.y + 4}">${SHORT[e.k]}</text>`;
+  }
+  g += `<line class="cross" id="${host}-c" y1="${m.t}" y2="${m.t + ih}" x1="-10" x2="-10"/>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${g}<rect id="${host}-r" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="${host}-tip" hidden></div>`;
+  const rect = el.querySelector("rect"), cross = el.querySelector(".cross"), tip = el.querySelector(".tip");
+  function move(ev) {
+    const bb = rect.getBoundingClientRect();
+    const px = (ev.clientX - bb.left) / bb.width;
+    const t = opt.x0 + px * (opt.x1 - opt.x0);
+    cross.setAttribute("x1", sx(t)); cross.setAttribute("x2", sx(t));
+    let rows = "";
+    for (const k of KEYS) {
+      const d = D[k];
+      let j = 0, best = 1e9;
+      for (let i = 0; i < d.t.length; i++) { const dd = Math.abs(d.t[i] - t); if (dd < best) { best = dd; j = i; } }
+      rows += `<div><span><i style="background:var(${VAR[k]})"></i>${SHORT[k]}</span><span>${d[opt.key][j].toFixed(opt.dec)} ${opt.unit}</span></div>`;
+    }
+    tip.innerHTML = `<b>t = ${t.toFixed(0)} ms</b>${rows}`;
+    tip.hidden = false;
+    const host = el.getBoundingClientRect();
+    let left = ev.clientX - host.left + 14;
+    if (left + 210 > host.width) left = ev.clientX - host.left - 214;
+    tip.style.left = Math.max(0, left) + "px"; tip.style.top = (ev.clientY - host.top + 10) + "px";
+  }
+  rect.addEventListener("pointermove", move);
+  rect.addEventListener("pointerleave", () => { tip.hidden = true; cross.setAttribute("x1", -10); cross.setAttribute("x2", -10); });
+}
+
+function draw() {
+  lineChart("chart-ang", { key: "ang", x0: -50, x1: 1500, y0: -50, y1: 20, yticks: [-45, -30, -15, 0, 14], xticks: [0, 250, 500, 750, 1000, 1250, 1500], ref: 14, xlabel: "tiempo desde el disparo (ms)", ylabel: "ángulo (°)", dec: 1, unit: "°" });
+  lineChart("chart-vel", { key: "vp", x0: -20, x1: 350, y0: 0, y1: 8, yticks: [0, 2, 4, 6, 8], xticks: [0, 50, 100, 150, 200, 250, 300, 350], xlabel: "tiempo desde el disparo (ms)", ylabel: "velocidad (m/s)", dec: 2, unit: "m/s" });
+}
+legend("leg1"); legend("leg2"); draw();
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(draw, 120); });
+
+// tabla de datos accesible
+(function () {
+  const ts = [0, 25, 50, 100, 150, 200, 300, 500, 1000];
+  let h = "<thead><tr><th>t (ms)</th>" + KEYS.map(k => `<th>${SHORT[k]} · ángulo</th><th>punta m/s</th>`).join("") + "</tr></thead><tbody>";
+  for (const t of ts) {
+    h += `<tr><td class="n">${t}</td>`;
+    for (const k of KEYS) {
+      const d = D[k]; let j = 0, best = 1e9;
+      for (let i = 0; i < d.t.length; i++) { const dd = Math.abs(d.t[i] - t); if (dd < best) { best = dd; j = i; } }
+      h += `<td class="n">${d.ang[j].toFixed(1)}°</td><td class="n">${d.vp[j].toFixed(2)}</td>`;
+    }
+    h += "</tr>";
+  }
+  document.getElementById("datatable").innerHTML = h + "</tbody>";
+})();
+</script>
